@@ -23,6 +23,18 @@ public class BookRepositoryTest {
     @Inject
     private BookRepository bookRepository;
 
+    @Test(expected = Exception.class)
+    public void findWithInvalidId() {
+        // find a book
+        bookRepository.find(null);
+    }
+
+    @Test(expected = Exception.class)
+    public void createInvalidBook() {
+        // create a book
+        Book book = new Book("isbn", null, 12F, 123, Language.ENGLISH, new Date(), "imageURL", "description");
+        bookRepository.create(book);
+    }
     @Test
     public void create() throws Exception {
         // Test counting books

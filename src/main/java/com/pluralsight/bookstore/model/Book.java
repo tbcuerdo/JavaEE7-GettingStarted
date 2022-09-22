@@ -17,7 +17,7 @@ public class Book {
     @Size(min = 1, max = 1000)
     private String title;
     @Column(length = 1000)
-    @Size(min = 10, max = 1000)
+    @Size(min = 10, max = 20000)
     private String description;
     @Column(name = "unit_cost")
     @Min(1)
@@ -31,10 +31,11 @@ public class Book {
     @Temporal(TemporalType.DATE)
     @Past
     private Date publicationDate;
-    @Column(name = "no_of_pages")
+    @Column(name = "nb_of_pages")
     private Integer nbOfPages;
     @Column(name = "image_url")
-    private String imageUrl;
+    private String imageURL;
+    @Enumerated
     private Language language;
 
     public Book(String isbn, String title, float unitCost, int nbOfPages, Language language, Date publicationDate, String imageURL, String description) {
@@ -44,12 +45,21 @@ public class Book {
         this.nbOfPages = nbOfPages;
         this.language = language;
         this.publicationDate = publicationDate;
-        this.imageUrl = imageURL;
+        this.imageURL = imageURL;
         this.description = description;
     }
 
     public Book() {
+    }
 
+    public Book(String isbn, String title, Float unitCost, Integer nbOfPages, Language language, String imageURL, String description) {
+        this.isbn = isbn;
+        this.title = title;
+        this.unitCost = unitCost;
+        this.nbOfPages = nbOfPages;
+        this.language = language;
+        this.imageURL = imageURL;
+        this.description = description;
     }
 
     public void setId(Long id) {
@@ -80,8 +90,8 @@ public class Book {
         this.nbOfPages = nbOfPages;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrl(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public void setLanguage(Language language) {
@@ -116,8 +126,8 @@ public class Book {
         return nbOfPages;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageURL() {
+        return imageURL;
     }
 
     public Language getLanguage() {
@@ -134,7 +144,7 @@ public class Book {
                 ", isbn='" + isbn + '\'' +
                 ", publicationDate=" + publicationDate +
                 ", nbOfPages=" + nbOfPages +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", imageURL='" + imageURL + '\'' +
                 ", language=" + language +
                 '}';
     }

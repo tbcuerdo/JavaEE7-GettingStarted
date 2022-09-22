@@ -1,27 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.pluralsight.java-ee-getting-started</groupId>
+    <groupId>com.pluralsight.java-ee-getting-started.java-ee-getting-started-m9</groupId>
     <artifactId>bookstore-back</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
-
-    <name>bookstore-back</name>
-
+    <name>Java EE Getting Started :: java-ee-getting-started-m9 :: Exposing a REST Service :: Back</name>
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Test -->
+        <version.java>1.8</version.java>
+        <version.javaee>7.0</version.javaee>
+        <!--  Test  -->
         <version.junit>4.12</version.junit>
         <version.arquillian>1.4.1.Final</version.arquillian>
         <version.arquillian.wildfly>2.1.1.Final</version.arquillian.wildfly>
-        <version.shrinkwrap>1.2.6</version.shrinkwrap>
-        <!-- Plugins -->
+        <version.arquillian.rest>1.0.0.Alpha4</version.arquillian.rest>
+        <version.resteasy>3.6.3.Final</version.resteasy>
+        <!--  Plugins  -->
+        <version.assembly.plugin>3.1.1</version.assembly.plugin>
+        <version.compiler.plugin>3.8.0</version.compiler.plugin>
+        <version.dependency.plugin>3.1.1</version.dependency.plugin>
         <version.surefire.plugin>2.22.1</version.surefire.plugin>
+        <version.war.plugin>3.2.2</version.war.plugin>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -33,22 +34,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
+            <version>${version.javaee}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- TEST -->
+        <!--  TEST  -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -67,40 +60,44 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-rest-client-api</artifactId>
+            <version>${version.arquillian.rest}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-core</artifactId>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-rest-client-impl-3x</artifactId>
+            <version>${version.arquillian.rest}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.shrinkwrap</groupId>
-            <artifactId>shrinkwrap-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wildfly.arquillian</groupId>
-            <artifactId>wildfly-arquillian-container-remote</artifactId>
-            <version>${version.arquillian.wildfly}</version>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+            <version>${version.resteasy}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
+        <finalName>bookstore-back</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.surefire.plugin}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <systemPropertyVariables>
+                        <arquillian.launch>arquillian-wildfly-remote</arquillian.launch>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler.plugin}</version>
+                <configuration>
+                    <source>${version.java}</source>
+                    <target>${version.java}</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
@@ -109,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
+                <version>${version.war.plugin}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
@@ -117,7 +114,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.6</version>
+                <version>${version.dependency.plugin}</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -131,7 +128,7 @@
                                 <artifactItem>
                                     <groupId>javax</groupId>
                                     <artifactId>javaee-endorsed-api</artifactId>
-                                    <version>7.0</version>
+                                    <version>${version.javaee}</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>
@@ -139,7 +136,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${version.assembly.plugin}</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>src</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
 </project>
